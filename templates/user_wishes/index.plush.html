@@ -1,0 +1,39 @@
+<div class="page-header">
+  <h1>UserWishes</h1>
+</div>
+<ul class="list-unstyled list-inline">
+  <li>
+    <%= linkTo(newUserWishesPath(), {class: "btn btn-primary"}) { %>
+      Create New UserWish
+    <% } %>
+  </li>
+</ul>
+
+<table class="table table-striped">
+  <thead>
+  <th>Name</th>
+    <th>Description</th>
+    <th>UserID</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (userWish) in userWishes { %>
+      <tr>
+      <td><%= userWish.Name %></td>
+        <td><%= userWish.Description %></td>
+        <td><%= userWish.UserID %></td>
+        <td>
+          <div class="pull-right">
+            <%= linkTo(userWishPath({ user_wish_id: userWish.ID }), {class: "btn btn-info", body: "View"}) %>
+            <%= linkTo(editUserWishPath({ user_wish_id: userWish.ID }), {class: "btn btn-warning", body: "Edit"}) %>
+            <%= linkTo(userWishPath({ user_wish_id: userWish.ID }), {class: "btn btn-danger", "data-method": "DELETE", "data-confirm": "Are you sure?", body: "Destroy"}) %>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

@@ -1,0 +1,8 @@
+<div class="page-header">
+  <h1>Edit GroupUser</h1>
+</div>
+
+<%= formFor(groupUser, {action: groupUserPath({ group_user_id: groupUser.ID }), method: "PUT"}) { %>
+  <%= partial("group_users/form.html") %>
+  <%= linkTo(groupUserPath({ group_user_id: groupUser.ID }), {class: "btn btn-warning", "data-confirm": "Are you sure?", body: "Cancel"}) %>
+<% } %>

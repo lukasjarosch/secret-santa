@@ -1,0 +1,35 @@
+<div class="page-header">
+  <h1>Groups</h1>
+</div>
+<ul class="list-unstyled list-inline">
+  <li>
+    <%= linkTo(newGroupsPath(), {class: "btn btn-primary"}) { %>
+      Create New Group
+    <% } %>
+  </li>
+</ul>
+
+<table class="table table-striped">
+  <thead>
+  <th>Name</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (group) in groups { %>
+      <tr>
+      <td><%= group.Name %></td>
+        <td>
+          <div class="pull-right">
+            <%= linkTo(groupPath({ group_id: group.ID }), {class: "btn btn-info", body: "View"}) %>
+            <%= linkTo(editGroupPath({ group_id: group.ID }), {class: "btn btn-warning", body: "Edit"}) %>
+            <%= linkTo(groupPath({ group_id: group.ID }), {class: "btn btn-danger", "data-method": "DELETE", "data-confirm": "Are you sure?", body: "Destroy"}) %>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

@@ -1,0 +1,9 @@
+create_table("group_users") {
+	t.Column("id", "uuid", {primary: true})
+	t.Column("group_id", "uuid", {})
+	t.Column("name", "string", {})
+	t.Column("email", "string", {})
+	t.Timestamps()
+}
+
+add_foreign_key("group_users", "group_id", {"groups": ["id"]})

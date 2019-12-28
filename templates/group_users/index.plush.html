@@ -1,0 +1,44 @@
+<div class="page-header">
+  <h1>GroupUsers</h1>
+</div>
+<ul class="list-unstyled list-inline">
+  <li class="list-inline-item">
+    <%= linkTo(groupPath({ group_id: groupID }), {class: "btn btn-info"}) { %>
+    Back to group
+    <% } %>
+  </li>
+  <li class="list-inline-item">
+    <%= linkTo(newGroupUsersPath({ group_id: groupID }), {class: "btn btn-primary"}) { %>
+      Create New GroupUser
+    <% } %>
+  </li>
+</ul>
+
+<table class="table table-striped">
+  <thead>
+  <th>GroupID</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (groupUser) in groupUsers { %>
+      <tr>
+      <td><%= groupUser.GroupID %></td>
+        <td><%= groupUser.Name %></td>
+        <td><%= groupUser.Email %></td>
+        <td>
+          <div class="pull-right">
+            <%= linkTo(groupUserPath({ group_id: groupID, group_user_id: groupUser.ID }), {class: "btn btn-info", body: "View"}) %>
+            <%= linkTo(editGroupUserPath({ group_id: groupID, group_user_id: groupUser.ID }), {class: "btn btn-warning", body: "Edit"}) %>
+            <%= linkTo(groupUserPath({ group_id: groupID, group_user_id: groupUser.ID }), {class: "btn btn-danger", "data-method": "DELETE", "data-confirm": "Are you sure?", body: "Destroy"}) %>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>
