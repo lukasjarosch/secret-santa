@@ -1,6 +1,0 @@
-- id: "group_user.created.success"
-  translation: "GroupUser was successfully created."
-- id: "group_user.updated.success"
-  translation: "GroupUser was successfully updated."
-- id: "group_user.destroyed.success"
-  translation: "GroupUser was successfully destroyed."

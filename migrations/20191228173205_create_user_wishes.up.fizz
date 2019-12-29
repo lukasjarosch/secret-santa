@@ -1,9 +1,0 @@
-create_table("user_wishes") {
-	t.Column("id", "uuid", {primary: true})
-	t.Column("name", "string", {})
-	t.Column("description", "string", {})
-	t.Column("user_id", "uuid", {})
-	t.Timestamps()
-}
-
-add_foreign_key("user_wishes", "user_id", {"group_users": ["id"]})
