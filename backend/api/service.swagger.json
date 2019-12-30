@@ -1,0 +1,368 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Secret-Santa API",
+    "version": "1.0"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/group": {
+      "post": {
+        "summary": "CreateGroup stores a new group.",
+        "operationId": "CreateGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateGroupResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateGroupRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SecretSantaAPI"
+        ]
+      }
+    },
+    "/v1/group/{groupId}": {
+      "get": {
+        "operationId": "GetGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetGroupResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SecretSantaAPI"
+        ]
+      },
+      "post": {
+        "summary": "Add a group member to a given group.",
+        "operationId": "AddGroupMember",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AddGroupMemberResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1AddGroupMemberRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SecretSantaAPI"
+        ]
+      }
+    },
+    "/v1/group/{groupId}/invite": {
+      "post": {
+        "summary": "Send invite emails to all group members. Does not return anything.",
+        "operationId": "SendInviteEmails",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SendInviteEmailsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1SendInviteEmailsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SecretSantaAPI"
+        ]
+      }
+    },
+    "/v1/group/{groupId}/mapping": {
+      "post": {
+        "summary": "Creates a secret-santa mapping permutation and stores it in the database.\nDoes not return anything, only fails if something went wrong.\nA mapping can only be created if all group members have saved their wish-lists.\nCreating a mapping will 'close' the group and prevent any further changes of members wishes.",
+        "operationId": "CreateMapping",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateMappingResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SecretSantaAPI"
+        ]
+      }
+    },
+    "/v1/group/{groupId}/sendSantaMails": {
+      "post": {
+        "summary": "Sends out emails to all members containing the information about their special one :)\nThis RPC will fail if no mapping has been created. Does not return anything.",
+        "operationId": "SendSantaEmails",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SendSantaEmailsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SecretSantaAPI"
+        ]
+      }
+    },
+    "/v1/member/{memberId}/wishes": {
+      "post": {
+        "summary": "Save multiple wishes for a given GroupMember.\nWishes can only be saved as long as no 'santa-mapping' has been created.",
+        "operationId": "SaveWishes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveWishesResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "memberId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1SaveWishesRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SecretSantaAPI"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "typeDate": {
+      "type": "object",
+      "properties": {
+        "year": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Year of date. Must be from 1 to 9999, or 0 if specifying a date without\na year."
+        },
+        "month": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Month of year. Must be from 1 to 12, or 0 if specifying a year without a\nmonth and day."
+        },
+        "day": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Day of month. Must be from 1 to 31 and valid for the year and month, or 0\nif specifying a year by itself or a year and month where the day is not\nsignificant."
+        }
+      },
+      "description": "* A full date, with non-zero year, month and day values\n* A month and day value, with a zero year, e.g. an anniversary\n* A year on its own, with zero month and day values\n* A year and month value, with a zero day, e.g. a credit card expiration date\n\nRelated types are [google.type.TimeOfDay][google.type.TimeOfDay] and `google.protobuf.Timestamp`.",
+      "title": "Represents a whole or partial calendar date, e.g. a birthday. The time of day\nand time zone are either specified elsewhere or are not significant. The date\nis relative to the Proleptic Gregorian Calendar. This can represent:"
+    },
+    "v1AddGroupMemberRequest": {
+      "type": "object",
+      "properties": {
+        "groupId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "v1AddGroupMemberResponse": {
+      "type": "object",
+      "properties": {
+        "member": {
+          "$ref": "#/definitions/v1GroupMember"
+        }
+      }
+    },
+    "v1CreateGroupRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "creatorName": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CreateGroupResponse": {
+      "type": "object",
+      "properties": {
+        "group": {
+          "$ref": "#/definitions/v1Group"
+        }
+      }
+    },
+    "v1CreateMappingResponse": {
+      "type": "object"
+    },
+    "v1GetGroupResponse": {
+      "type": "object"
+    },
+    "v1Group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "creatorName": {
+          "type": "string"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1GroupMember"
+          }
+        },
+        "createdAt": {
+          "$ref": "#/definitions/typeDate"
+        }
+      }
+    },
+    "v1GroupMember": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "v1SaveWishesRequest": {
+      "type": "object",
+      "properties": {
+        "memberId": {
+          "type": "string"
+        },
+        "wishes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Wish"
+          }
+        }
+      }
+    },
+    "v1SaveWishesResponse": {
+      "type": "object",
+      "properties": {
+        "member": {
+          "$ref": "#/definitions/v1GroupMember"
+        }
+      }
+    },
+    "v1SendInviteEmailsRequest": {
+      "type": "object",
+      "properties": {
+        "groupId": {
+          "type": "string"
+        }
+      }
+    },
+    "v1SendInviteEmailsResponse": {
+      "type": "object"
+    },
+    "v1SendSantaEmailsResponse": {
+      "type": "object"
+    },
+    "v1Wish": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

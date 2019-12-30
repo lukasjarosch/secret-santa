@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package secretsanta.v1;
+
+import "third_party/google/type/date.proto";
+
+message Group {
+    string id = 1;
+    string name = 2;
+    string creatorName = 3;
+    repeated GroupMember members = 4;
+    google.type.Date createdAt = 5;
+}
+
+message GroupMember {
+    string id = 1;
+    string name = 2;
+}
+
+message Wish {
+    string id = 1;
+    string name = 2;
+    string note = 3;
+}
+
+enum GroupStatus {
+    UNDEFINED_GROUP_STATUS = 0;
+    CREATED_GROUP_STATUS = 1;
+    INVITED_GROUP_STATUS = 2; // member invites sent, no more members can be added
+    MAPPED_GROUP_STATUS = 3; // all members have saved their wishes and a mapping has been saved
+    FINISHED_GROUP_STATUS = 4; //  secret-santa mails are sent, group is done playing
+}

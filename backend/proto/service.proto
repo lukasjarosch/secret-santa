@@ -1,0 +1,124 @@
+syntax = "proto3";
+
+package secretsanta.v1;
+
+import "messages.proto";
+
+import "third_party/google/api/annotations.proto";
+import "third_party/protoc-gen-swagger/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+    info: {
+        title: "Secret-Santa API",
+        version: "1.0",
+    };
+};
+
+service SecretSantaAPI {
+    // CreateGroup stores a new group.
+    rpc CreateGroup (CreateGroupRequest) returns (CreateGroupResponse) {
+        option (google.api.http) = {
+            post: "/v1/group",
+            body: "*",
+        };
+    };
+
+    rpc GetGroup(GetGroupRequest) returns (GetGroupResponse) {
+        option (google.api.http) = {
+            get: "/v1/group/{groupId}",
+        };
+    }
+
+    // Add a group member to a given group.
+    rpc AddGroupMember (AddGroupMemberRequest) returns (AddGroupMemberResponse) {
+        option (google.api.http) = {
+            post: "/v1/group/{groupId}",
+            body: "*",
+        };
+    }
+
+    // Send invite emails to all group members. Does not return anything.
+    rpc SendInviteEmails(SendInviteEmailsRequest) returns (SendInviteEmailsResponse) {
+        option (google.api.http) = {
+            post: "/v1/group/{groupId}/invite",
+            body: "*",
+        };
+    }
+
+    // Save multiple wishes for a given GroupMember.
+    // Wishes can only be saved as long as no 'santa-mapping' has been created.
+    rpc SaveWishes (SaveWishesRequest) returns (SaveWishesResponse) {
+        option (google.api.http) = {
+            post: "/v1/member/{memberId}/wishes",
+            body: "*",
+        };
+    }
+
+    // Creates a secret-santa mapping permutation and stores it in the database.
+    // Does not return anything, only fails if something went wrong.
+    // A mapping can only be created if all group members have saved their wish-lists.
+    // Creating a mapping will 'close' the group and prevent any further changes of members wishes.
+    rpc CreateMapping(CreateMappingRequest) returns (CreateMappingResponse) {
+        option (google.api.http) = {
+            post: "/v1/group/{groupId}/mapping",
+        };
+    }
+
+    // Sends out emails to all members containing the information about their special one :)
+    // This RPC will fail if no mapping has been created. Does not return anything.
+    rpc SendSantaEmails(SendSantaEmailsRequest) returns (SendSantaEmailsResponse) {
+        option (google.api.http) = {
+            post: "/v1/group/{groupId}/sendSantaMails",
+        };
+    }
+}
+
+message CreateGroupRequest {
+    string name = 1;
+    string creatorName = 2;
+}
+message CreateGroupResponse {
+    Group group = 1;
+}
+
+message GetGroupRequest {
+    string groupId = 1;
+}
+message GetGroupResponse {
+
+}
+
+message AddGroupMemberRequest {
+    string groupId = 1;
+    string name = 2;
+    string email = 3;
+}
+message AddGroupMemberResponse {
+    GroupMember member = 1;
+}
+
+message SendInviteEmailsRequest {
+   string groupId = 1;
+}
+message SendInviteEmailsResponse {
+}
+
+message SaveWishesRequest {
+    string memberId = 1;
+    repeated Wish wishes = 2;
+}
+message SaveWishesResponse {
+    GroupMember member = 1;
+}
+
+message CreateMappingRequest {
+    string groupId = 1;
+}
+message CreateMappingResponse {
+}
+
+message SendSantaEmailsRequest {
+   string groupId = 1;
+}
+message SendSantaEmailsResponse {
+}
