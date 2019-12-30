@@ -6,14 +6,12 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"github.com/lukasjarosch/genki"
 	"github.com/lukasjarosch/genki/cli"
 	"github.com/lukasjarosch/genki/config"
 	"github.com/lukasjarosch/genki/logger"
 	"github.com/lukasjarosch/genki/server/http"
-	"github.com/lukasjarosch/genki/types/nullable"
-
-	"github.com/gorilla/mux"
 
 	"github.com/lukasjarosch/secret-santa/internal/handler"
 	"github.com/lukasjarosch/secret-santa/internal/models"
@@ -30,7 +28,6 @@ func main() {
 		ID:          1,
 		GroupID:     uuid.New(),
 		Name:        "asdf",
-		Description: nullable.String{},
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 	}
@@ -63,11 +60,13 @@ func main() {
 
 	groupHandler := handler.NewGroupHandler()
 
-	router.HandleFunc("/group/", groupHandler.GetGroup)
-	router.HandleFunc("/group", groupHandler.GetGroup)
-	router.HandleFunc("/group/{groupID}", groupHandler.ShowGroup)
-	router.HandleFunc("/admin/groups/", groupHandler.ListAll)
-	router.HandleFunc("/admin/groups", groupHandler.ListAll)
+	router.HandleFunc("/group/", groupHandler.FindGroup).Methods("GET")
+	router.HandleFunc("/group", groupHandler.FindGroup).Methods("GET")
+	router.HandleFunc("/group/new", groupHandler.CreateGroup).Methods("GET")
+	router.HandleFunc("/group/find", groupHandler.ShowGroup).Methods("POST")
+	router.HandleFunc("/group/{groupID}", groupHandler.ShowGroup).Methods("GET")
+	router.HandleFunc("/admin/groups/", groupHandler.ListAll).Methods("GET")
+	router.HandleFunc("/admin/groups", groupHandler.ListAll).Methods("GET")
 	router.PathPrefix("/").Handler(http2.FileServer(http2.Dir("./static/")))
 
 	httpServer := http.NewServer()

@@ -1,0 +1,28 @@
+{{ define "content" }}
+<div class="container">
+
+	<h1 class="mt-5">Meine Gruppe</h1>
+	<p class="lead">
+		Bisher hast du keine Gruppe geladen. Gib die Gruppen-ID ein um fortzufahren.
+	</p>
+	<hr class="dashed-separator">
+
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="card">
+				<div class="card-body">
+					<form class="clearfix" action="/group/find" method="post">
+						<div class="form-group">
+							<input type="text" class="form-control" id="groupID" name="groupID" aria-describedby="groupHelp" placeholder="Gruppen-ID">
+						</div>
+						<button type="submit" class="btn btn-primary float-right">Laden</button>
+					</form>
+				</div>
+			</div>
+			<div class="alert alert-secondary mt-3">
+				Alternativ kannst du selbstverständlich auch den, dir zur Verfügung gestellten, Link nutzen.
+			</div>
+		</div>
+	</div>
+</div>
+{{ end }}

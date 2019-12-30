@@ -1,12 +1,10 @@
 package models
 
-
 import (
 	"encoding/json"
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/lukasjarosch/genki/types/nullable"
 )
 
 // Group represents a group of people, playing secret-santa.
@@ -14,7 +12,6 @@ type Group struct {
 	ID          int             `json:"-" db:"id" validate:"required"`
 	GroupID     uuid.UUID       `json:"group_id" db:"group_id" validate:"required"`
 	Name        string          `json:"name" db:"name" validate:"required"`
-	Description nullable.String `json:"description" db:"description"`
 	Status      Status          `json:"status" db:"status"`
 	CreatedAt   time.Time       `json:"created_at" db:"created_at" validate:"required"`
 	UpdatedAt   time.Time       `json:"updated_at" db:"updated_at" validate:"required"`
